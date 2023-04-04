@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript">
+    function generateText() {
+      var start = new Date(document.getElementById("start_date").value);
+      var end = new Date(document.getElementById("end_date").value);
+      var time_difference = end.getTime() - start.getTime();    
+      var number_of_days = time_difference / (1000 * 60 * 60 * 24);
+      
+      var day = new DayText(start);
+      var outputString = "";
+    
+      for (var i = 0; i <= number_of_days; i++)
+      {
+        outputString += day.emoji[i] + " " + day.toString() + "\n";
+        day.increment();
+      }
+
+      document.getElementById("output").innerText = outputString;
+    }
+
+    class DayText {
+      constructor(date_object) {
+        this.day = date_object.getDate();
+        this.month = date_object.getMonth();
+        this.weekday = date_object.getDay();
+        this.year = date_object.getYear();
+        this.date = date_object;
+        this.WeekDaysVerbose = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        this.WeekDay = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
+        this.MonthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        this.emoji = [
+          ":regional_indicator_a:",
+          ":regional_indicator_b:",
+          ":regional_indicator_c:",
+          ":regional_indicator_d:",
+          ":regional_indicator_e:",
+          ":regional_indicator_f:",
+          ":regional_indicator_g:",
+          ":regional_indicator_h:",
+          ":regional_indicator_i:",
+          ":regional_indicator_j:",
+          ":regional_indicator_k:",
+          ":regional_indicator_l:",
+          ":regional_indicator_m:",
+          ":regional_indicator_n:",
+          ":regional_indicator_o:",
+          ":regional_indicator_p:",
+          ":regional_indicator_q:",
+          ":regional_indicator_r:",
+          ":regional_indicator_s:",
+          ":regional_indicator_t:",
+          ":regional_indicator_u:",
+          ":regional_indicator_v:",
+          ":regional_indicator_w:",
+          ":regional_indicator_x:",
+          ":regional_indicator_y:",
+          ":regional_indicator_z:"
+        ];
+
+        // If this year is a leap year, set Feb to have 29 days
+        if (((this.year%100 == 0) && (this.year%400 == 0)) || ((this.year%4 == 0) && (this.year%100 != 0))) { 
+            this.MonthDays[1] = 29;
+        }
+      }
+
+      toString() {
+        var nextday = this.day + 1;
+        if ( nextday > this.MonthDays[this.month]) {
+            nextday = 1;
+        }
+
+        var output = this.day + "/" + nextday;
+        output += " (" + this.WeekDay[this.weekday] + "/" + this.WeekDay[(this.weekday + 1)%7] +")";
+        return output;
+      }
+
+      increment() {
+        this.day  += 1; // The day of the month
+        // Check if end of month has been reached.
+        if (this.day > this.MonthDays[this.month]) {
+            this.day = 1;
+            this.month += 1;
+        }
+
+        // Check if reached end of December
+        if (this.month == 12) {
+            this.month = 0;
+            this.year += 1;
+        }
+
+        this.weekday = (this.weekday + 1)%7; // The day of the week (Sun -> Sat)
+      }
+    }
+  </script>
+</head>
+
+<h1>Discord Date Poll</h1>
+
+<form >
+  <label for="start_date">Start Date:</label>
+  <input type="date" id="start_date" name="start_date">
+  <br>
+  <label for="end_date">End Date:</label>
+  <input type="date" id="end_date" name="end_date">
+  <br>
+  <!-- <input type="submit" onclick="generateText()"> -->
+</form>
+<button type="button" onclick="generateText()">Submit</button>
+
+<p id="output"></p>
+</body>
+</html>
